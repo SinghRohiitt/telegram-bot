@@ -8,11 +8,11 @@ import User from "../models/User.js";
 
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN);
 
-console.log("⏱ Joke cron initialized");
+// console.log(" Joke cron initialized");
 
 // har 1 minute me chalega
 cron.schedule("* * * * *", async () => {
-  console.log("⏰ Cron running...");
+//   console.log(" Cron running...");
 
   const users = await User.find({ isEnabled: true });
 
@@ -45,5 +45,5 @@ async function sendJoke(user) {
   user.lastSentAt = new Date();
   await user.save();
 
-  console.log("😂 Joke sent to", user.chatId);
+//   console.log("Joke sent to", user.chatId);
 }

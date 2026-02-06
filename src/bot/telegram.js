@@ -5,11 +5,11 @@ import TelegramBot from "node-telegram-bot-api";
 import User from "../models/User.js";
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
-console.log("TOKEN 👉", process.env.TELEGRAM_BOT_TOKEN);
+// console.log("TOKEN 👉", process.env.TELEGRAM_BOT_TOKEN);
 // polling mode (simple & hackathon-safe)
 const bot = new TelegramBot(token, { polling: true });
 
-console.log("🤖 Telegram bot started");
+// console.log("🤖 Telegram bot started");
 
 // /start command
 bot.onText(/\/start/, async (msg) => {
