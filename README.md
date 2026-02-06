@@ -1,4 +1,4 @@
-# Telegram Joke Bot 🤖😂
+# Telegram Bot 🤖😂
 
 A Telegram bot that sends random jokes to users at configurable time intervals.  
 Users can enable/disable joke delivery and control how frequently jokes are sent.  
@@ -26,6 +26,20 @@ User preferences are stored persistently using MongoDB.
 - Axios
 
 ---
+
+## 🤖 Telegram Bot Details
+
+The bot can be accessed directly on Telegram.
+
+**Bot Username:**  
+@roohhiitbot
+
+### How to use
+1. Open Telegram
+2. Search for `@roohhiitbot`
+3. Send `/start` to start receiving jokes
+4. Use commands like `SET <minutes>`, `DISABLE`, and `ENABLE` to control delivery
+
 
 ## 🤖 Bot Commands
 
