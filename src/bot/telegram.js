@@ -9,7 +9,16 @@ const token = process.env.TELEGRAM_BOT_TOKEN;
 // polling mode (simple & hackathon-safe)
 const bot = new TelegramBot(token, { polling: true });
 
-// console.log("🤖 Telegram bot started");
+/* ---------------- HELP MENU ---------------- */
+const HELP_TEXT = `
+❓ Unsupported command.
+
+Available commands:
+• /start – Start receiving jokes
+• SET <minutes> – Set joke frequency (e.g. SET 5)
+• ENABLE – Enable joke delivery
+• DISABLE – Disable joke delivery
+`;
 
 // /start command
 bot.onText(/\/start/, async (msg) => {
@@ -23,13 +32,19 @@ bot.onText(/\/start/, async (msg) => {
 
   bot.sendMessage(
     chatId,
-    "Welcome! 🎉\nI will send you jokes every 1 minute.\nYou can use:\nENABLE\nDISABLE\nSET <minutes>",
+    "Welcome! 🎉\nI will send you jokes every 1 minute.\n\nCommands:\nSET <minutes>\nENABLE\nDISABLE",
   );
 });
 
 // ENABLE command
 bot.onText(/ENABLE/i, async (msg) => {
   const chatId = msg.chat.id.toString();
+
+  const user = await User.findOne({ chatId });
+
+  if (user && user.isEnabled) {
+    return bot.sendMessage(chatId, "ℹ️ Joke delivery is already enabled.");
+  }
 
   await User.findOneAndUpdate({ chatId }, { isEnabled: true });
 
@@ -39,6 +54,12 @@ bot.onText(/ENABLE/i, async (msg) => {
 // DISABLE command
 bot.onText(/DISABLE/i, async (msg) => {
   const chatId = msg.chat.id.toString();
+
+  const user = await User.findOne({ chatId });
+
+  if (user && !user.isEnabled) {
+    return bot.sendMessage(chatId, "ℹ️ Joke delivery is already disabled.");
+  }
 
   await User.findOneAndUpdate({ chatId }, { isEnabled: false });
 
@@ -57,6 +78,20 @@ bot.onText(/SET (\d+)/i, async (msg, match) => {
   await User.findOneAndUpdate({ chatId }, { frequency: minutes });
 
   bot.sendMessage(chatId, `⏱ Frequency set to ${minutes} minutes`);
+});
+
+/* ---------------- FALLBACK / HELP ---------------- */
+bot.on("message", async (msg) => {
+  const text = msg.text;
+  const chatId = msg.chat.id.toString();
+
+  // ignore valid commands
+  const validPatterns = [/^\/start/i, /^ENABLE/i, /^DISABLE/i, /^SET \d+/i];
+
+  const isValid = validPatterns.some((regex) => regex.test(text));
+  if (!isValid) {
+    bot.sendMessage(chatId, HELP_TEXT);
+  }
 });
 
 export default bot;
